@@ -1,0 +1,80 @@
+### Create new user Foo
+POST localhost:8080/api/v1/users
+Content-Type: application/json
+
+{
+  "userName": "Foo"
+}
+
+
+### Create new user bar
+POST localhost:8080/api/v1/users
+Content-Type: application/json
+
+{
+  "userName": "Bar"
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 201  , "Response status is not 200");
+    });
+%}
+
+
+### Sends a message from Foo to Bar
+POST localhost:8080/api/v1/messages
+Content-Type: application/json
+
+{
+  "senderId": 1,
+  "receiverId": 2,
+  "message": "This is a test message from Foo to Bar"
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 201, "Response status is not 200");
+    });
+
+%}
+
+### Sends a message from Bar to Foo
+POST localhost:8080/api/v1/messages
+Content-Type: application/json
+
+{
+  "senderId": 2,
+  "receiverId": 1,
+  "message": "This is a test message from Bar to Foo"
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 201, "Response status is not 200");
+    });
+
+%}
+
+### Get messages sent by Foo (id 1)
+GET localhost:8080/api/v1/messages/1?search=sent
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+%}
+
+
+### Get messages received by Foo (id 1)
+GET localhost:8080/api/v1/messages/1?search=received
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+%}
